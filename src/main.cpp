@@ -50,7 +50,7 @@ map<uint256, map<uint256, CDataStream*> > mapOrphanTransactionsByPrev;
 // Constant stuff for coinbase transactions we create:
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "FooCoin Signed Message:\n";
+const string strMessageMagic = "BitShekel Signed Message:\n";
 
 double dHashesPerSec;
 int64 nHPSTimerStart;
@@ -828,13 +828,16 @@ uint256 static GetOrphanRoot(const CBlock* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 1 * COIN;
+    int64 nSubsidy = 50 * COIN;
+
+    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
+    nSubsidy >>= (nHeight / 840000); // BitShekel: 840k blocks in ~4 years
 
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 1 * 24 * 60 * 60; // FooCoin: 1 days
-static const int64 nTargetSpacing = 120; // FooCoin: 2 minute blocks
+static const int64 nTargetTimespan = 3.5 * 24 * 60 * 60; // BitShekel: 3.5 days
+static const int64 nTargetSpacing = 2.5 * 60; //  BitShekel: 2.5 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
 // Thanks: Balthazar for suggesting the following fix
@@ -1178,7 +1181,7 @@ bool CTransaction::ConnectInputs(MapPrevTx inputs,
 {
     // Take over previous transactions' spent pointers
     // fBlock is true when this is called from AcceptBlock when a new best-block is added to the blockchain
-    // fMiner is true when called from the internal foocoin miner
+    // fMiner is true when called from the internal bitshekel miner
     // ... both are false when called from CTransaction::AcceptToMemoryPool
     if (!IsCoinBase())
     {
@@ -1925,7 +1928,7 @@ bool CheckDiskSpace(uint64 nAdditionalBytes)
         string strMessage = _("Warning: Disk space is low");
         strMiscWarning = strMessage;
         printf("*** %s\n", strMessage.c_str());
-        uiInterface.ThreadSafeMessageBox(strMessage, "FooCoin", CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION | CClientUIInterface::MODAL);
+        uiInterface.ThreadSafeMessageBox(strMessage, "BitShekel", CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION | CClientUIInterface::MODAL);
         StartShutdown();
         return false;
     }
@@ -1981,7 +1984,7 @@ bool LoadBlockIndex(bool fAllowNew)
         pchMessageStart[1] = 0xc0;
         pchMessageStart[2] = 0xb8;
         pchMessageStart[3] = 0xdb;
-        hashGenesisBlock = uint256("0x");
+        hashGenesisBlock = uint256("0xdf2c75dc7cc57733ac2861810eb8fd6c4ffa7477a57f926cee79de636e591c52");
     }
 
     //
@@ -2002,7 +2005,7 @@ bool LoadBlockIndex(bool fAllowNew)
     
         
         // Genesis block
-        const char* pszTimestamp = "Traditionally one puts something timely here coinciding with the epoch";
+        const char* pszTimestamp = "Israeli MKs Demand Jewish Access to Temple Mount on Hanukkah";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2014,21 +2017,21 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1300000000; //epochtime
+        block.nTime    = 1385805774; //epochtime
         block.nBits    = 0x1e0ffff0;
         block.nNonce   = 0;
 
         if (fTestNet)
         {
-            block.nTime    = 1300000000;
-            block.nNonce   = 0;
+            block.nTime    = 1385805774;
+            block.nNonce   = 387299;
         }
 
         //// debug print
         printf("%s\n", block.GetHash().ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x"));
+        assert(block.hashMerkleRoot == uint256("0xfd2cd42e72d80e081f976f4f6094fb0d66d7b72912ab568e8ad84a871392da27"));
 
         // If genesis block hash does not match, then generate new genesis hash.
         if (true && block.GetHash() != hashGenesisBlock)
