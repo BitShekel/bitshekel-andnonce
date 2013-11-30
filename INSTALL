@@ -1,9 +1,9 @@
-Building FooCoin
+Building BitShekel
 
-See doc/readme-qt.rst for instructions on building foocoin-qt,
+See doc/readme-qt.rst for instructions on building bitshekel-qt,
 the intended-for-end-users, nice-graphical-interface, reference
-implementation of FooCoin.
+implementation of BitShekel.
 
-See doc/build-*.txt for instructions on building foocoin,
+See doc/build-*.txt for instructions on building bitshekel,
 the intended-for-services, no-graphical-interface, reference
-implementation of FooCoin.
+implementation of BitShekel.

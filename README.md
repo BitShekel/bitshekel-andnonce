@@ -1,3 +1,3 @@
-FooCoin (FOO)
+BitShekel (BSH)
 
-Blah, blah, blah.
+Barukh
